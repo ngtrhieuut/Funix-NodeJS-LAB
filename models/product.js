@@ -37,4 +37,4 @@ module.exports = class Product {
       cb(JSON.parse(fileContent));
     });
   }
-};
+}
