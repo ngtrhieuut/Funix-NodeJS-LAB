@@ -9,16 +9,19 @@ const p = path.join(
 
 module.exports = class Cart {
   static addProduct(id, productPrice) {
+    // Fetch the previous cart
     fs.readFile(p, (err, fileContent) => {
       let cart = { products: [], totalPrice: 0 };
       if (!err) {
         cart = JSON.parse(fileContent);
       }
+      // Analyze the cart => Find existing product
       const existingProductIndex = cart.products.findIndex(
         prod => prod.id === id
       );
       const existingProduct = cart.products[existingProductIndex];
       let updatedProduct;
+      // Add new product/ increase quantity
       if (existingProduct) {
         updatedProduct = { ...existingProduct };
         updatedProduct.qty = updatedProduct.qty + 1;
@@ -40,16 +43,22 @@ module.exports = class Cart {
       if (err) {
         return;
       }
-      const updateCart = { ...JSON.parse(fileContent) };
-      const product = updateCart.products.findIndex(p => p.id === id);
+      const updatedCart = { ...JSON.parse(fileContent) };
+      const product = updatedCart.products.find(prod => prod.id === id);
+      if (!product) {
+          return;
+      }
       const productQty = product.qty;
-      updateCart.products = updateCart.products.filter(p => p.id !== id)
-      updateCart.totalPrice = updateCart.totalPrice - productPrice + productQty;
+      updatedCart.products = updatedCart.products.filter(
+        prod => prod.id !== id
+      );
+      updatedCart.totalPrice =
+        updatedCart.totalPrice - productPrice * productQty;
 
-      fs.writeFile(p, JSON.stringify(updateCart), err => {
+      fs.writeFile(p, JSON.stringify(updatedCart), err => {
         console.log(err);
       });
-    })
+    });
   }
 
   static getCart(cb) {
