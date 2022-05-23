@@ -3,7 +3,8 @@ const Product = require('../models/product');
 exports.getAddProduct = (req, res, next) => {
   res.render('admin/edit-product', {
     pageTitle: 'Add Product',
-    path: '/admin/add-product'
+    path: '/admin/add-product',
+    editing: false
   });
 };
 
@@ -22,10 +23,17 @@ exports.getEditProduct = (req, res, next) => {
   if(!editNode) {
     return res.redirect('/');
   }
-  res.render('admin/edit-product', {
-    pageTitle: 'Edit Product',
-    path: '/admin/edit-product',
-    editing: editNode,
+  const prodId = req.params.productId;
+  Product.findById(prodId, product => {
+    if (!product) {
+      return res.redirect('/');
+    }
+    res.render('admin/edit-product', {
+      pageTitle: 'Edit Product',
+      path: '/admin/edit-product',
+      editing: editNode,
+      product: product
+    });
   });
 };
 
