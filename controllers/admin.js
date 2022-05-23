@@ -19,8 +19,8 @@ exports.postAddProduct = (req, res, next) => {
 };
 
 exports.getEditProduct = (req, res, next) => {
-  const editNode = req.query.edit;
-  if(!editNode) {
+  const editMode = req.query.edit;
+  if (!editMode) {
     return res.redirect('/');
   }
   const prodId = req.params.productId;
@@ -31,7 +31,7 @@ exports.getEditProduct = (req, res, next) => {
     res.render('admin/edit-product', {
       pageTitle: 'Edit Product',
       path: '/admin/edit-product',
-      editing: editNode,
+      editing: editMode,
       product: product
     });
   });
