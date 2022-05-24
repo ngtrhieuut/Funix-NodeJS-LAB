@@ -19,7 +19,7 @@ exports.postAddProduct = (req, res, next) => {
     imageUrl: imageUrl,
     description: description
   }).then(result => {
-    console.log(result);
+    // console.log(result);
   }).catch(err => {
     console.log(err);
   });
