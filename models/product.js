@@ -26,6 +26,6 @@ module.exports = class Product {
   }
 
   static findById(id) {
-
+    return db.execute('SELECT * FROM `node-complete`.products WHERE products.id = ?', [id])
   }
 };
