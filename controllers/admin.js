@@ -23,6 +23,7 @@ exports.postAddProduct = (req, res, next) => {
   product
     .save()
     .then(result => {
+      // console.log(result);
       console.log('Created Product');
       res.redirect('/admin/products');
     })
@@ -65,7 +66,7 @@ exports.postEditProduct = (req, res, next) => {
       product.price = updatedPrice;
       product.description = updatedDesc;
       product.imageUrl = updatedImageUrl;
-      return product.save()
+      return product.save();
     })
     .then(result => {
       console.log('UPDATED PRODUCT!');
