@@ -27,17 +27,19 @@ class User {
     const db = getDb();
     return db.collection('users')
       .insertOne(this)
-      // .then()
-      // .catch(err => {console.log(err)});
+      .then()
+      .catch(err => {console.log(err)});
   }
 
   static findById(userId) {
     const db = getDb();
     return db.collection('users')
       .findOne({_id: new ObjectId(userId)})
-      // .next()
-      // .then()
-      // .catch(err => {console.log(err)});
+      .then(user => {
+        console.log(user);
+        return user;
+      })
+      .catch(err => {console.log(err)});
   }
 }
 
