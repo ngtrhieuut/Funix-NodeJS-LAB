@@ -1,48 +1,30 @@
-// // const Sequelize = require('sequelize');
-
-// // const sequelize = require('../util/database');
-
-// // const User = sequelize.define('user', {
-// //   id: {
-// //     type: Sequelize.INTEGER,
-// //     autoIncrement: true,
-// //     allowNull: false,
-// //     primaryKey: true
-// //   },
-// //   name: Sequelize.STRING,
-// //   email: Sequelize.STRING
-// // });
 // const mongodb = require('mongodb');
 // const getDb = require('../util/database').getDb;
 
 // const ObjectId = mongodb.ObjectId;
 
-// class User { 
+// class User {
 //   constructor(username, email, cart, id) {
 //     this.name = username;
 //     this.email = email;
-//     this.cart = cart;
+//     this.cart = cart; // {items: []}
 //     this._id = id;
 //   }
 
 //   save() {
 //     const db = getDb();
-//     return db.collection('users')
-//       .insertOne(this)
-//       .then()
-//       .catch(err => {console.log(err)});
+//     return db.collection('users').insertOne(this);
 //   }
 
 //   addToCart(product) {
-//     console.log(this.cart)
-//     const cartProductIndex = this.cart.item.findIndex(cp => {
+//     const cartProductIndex = this.cart.items.findIndex(cp => {
 //       return cp.productId.toString() === product._id.toString();
 //     });
 //     let newQuantity = 1;
-//     const updatedCartItems = [...this.cart.item];
+//     const updatedCartItems = [...this.cart.items];
 
 //     if (cartProductIndex >= 0) {
-//       newQuantity = this.cart.item[cartProductIndex].quantity + 1;
+//       newQuantity = this.cart.items[cartProductIndex].quantity + 1;
 //       updatedCartItems[cartProductIndex].quantity = newQuantity;
 //     } else {
 //       updatedCartItems.push({
@@ -51,7 +33,7 @@
 //       });
 //     }
 //     const updatedCart = {
-//       item: updatedCartItems
+//       items: updatedCartItems
 //     };
 //     const db = getDb();
 //     return db
@@ -64,35 +46,35 @@
 
 //   getCart() {
 //     const db = getDb();
-//     const productIds = this.cart.item.map(i => {
+//     const productIds = this.cart.items.map(i => {
 //       return i.productId;
-//     })
+//     });
 //     return db
 //       .collection('products')
-//       .find({_id: {$in: productIds}})
+//       .find({ _id: { $in: productIds } })
 //       .toArray()
 //       .then(products => {
 //         return products.map(p => {
 //           return {
-//             ...p, 
-//             quantity: this.cart.item.find(i => {
-//             return i.productId.toString() === p._id.toString();
-//           }).quantity
-//         }
-//         })
+//             ...p,
+//             quantity: this.cart.items.find(i => {
+//               return i.productId.toString() === p._id.toString();
+//             }).quantity
+//           };
+//         });
 //       });
 //   }
 
 //   deleteItemFromCart(productId) {
-//     const updatedCardItem = this.cart.item.filter(item => {
-//       return item.productId.toString() === productId.toString();
+//     const updatedCartItems = this.cart.items.filter(item => {
+//       return item.productId.toString() !== productId.toString();
 //     });
 //     const db = getDb();
 //     return db
 //       .collection('users')
 //       .updateOne(
 //         { _id: new ObjectId(this._id) },
-//         { $set: { cart: {item: updatedCardItem} } }
+//         { $set: { cart: { items: updatedCartItems } } }
 //       );
 //   }
 
@@ -101,7 +83,7 @@
 //     return this.getCart()
 //       .then(products => {
 //         const order = {
-//           item: products,
+//           items: products,
 //           user: {
 //             _id: new ObjectId(this._id),
 //             name: this.name
@@ -110,32 +92,36 @@
 //         return db.collection('orders').insertOne(order);
 //       })
 //       .then(result => {
-//         this.cart = {item: []};
+//         this.cart = { items: [] };
 //         return db
 //           .collection('users')
 //           .updateOne(
 //             { _id: new ObjectId(this._id) },
-//             { $set: { cart: { item: [] } } }
+//             { $set: { cart: { items: [] } } }
 //           );
-//       })
+//       });
 //   }
 
 //   getOrders() {
 //     const db = getDb();
 //     return db
 //       .collection('orders')
-//       .find({'user._id': new ObjectId(this._id)}).toArray();
+//       .find({ 'user._id': new ObjectId(this._id) })
+//       .toArray();
 //   }
 
 //   static findById(userId) {
 //     const db = getDb();
-//     return db.collection('users')
-//       .findOne({_id: new ObjectId(userId)})
+//     return db
+//       .collection('users')
+//       .findOne({ _id: new ObjectId(userId) })
 //       .then(user => {
 //         console.log(user);
 //         return user;
 //       })
-//       .catch(err => {console.log(err)});
+//       .catch(err => {
+//         console.log(err);
+//       });
 //   }
 // }
 
