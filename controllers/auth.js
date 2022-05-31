@@ -7,15 +7,23 @@ exports.getLogin = (req, res, next) => {
       isAuthenticated: false
     });
   };
+  
+  exports.getSignup = (req, res, next) => {
+    res.render('auth/signup', {
+      path: '/signup',
+      pageTitle: 'Signup',
+      isAuthenticated: false
+    });
+  };
 
 exports.postLogin = (req, res, next) => {
     User.findById('6295e5d813aeb438975b5373')
-      .then(user => {
+    .then(user => {
         req.session.isLoggedIn = true;
         req.session.user = user;
-        res.session.save((err) => {
-            console.log(err);
-            res.redirect('/');
+        req.session.save(err => {
+          console.log(err);
+          res.redirect('/');
         });
       })
       .catch(err => console.log(err));
@@ -26,4 +34,34 @@ exports.postLogin = (req, res, next) => {
       console.log(err);
       res.redirect('/');
     });
-  };
+};
+
+exports.postSignup = (req, res, next) => {
+    const email = req.body.email;
+    const password = req.body.password;
+    const confirmPassword = req.body.confirmPassword;
+
+    User.findOne({email: email})
+    .then(userDoc => {
+        if (userDoc) {
+            return res.redirect('/signup');
+        }
+        const user = new User({
+            email: email,
+            password: password,
+            card: {item: []}
+        })
+        return user.save()
+    })
+    .then(result => {
+        res.redirect('/login');
+    })
+    .catch(err => console.log(err));
+};
+
+exports.postLogout = (req, res, next) => {
+  req.session.destroy(err => {
+    console.log(err);
+    res.redirect('/');
+  });
+};
