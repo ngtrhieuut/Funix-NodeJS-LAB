@@ -11,7 +11,8 @@ const flash = require('connect-flash');
 const errorController = require('./controllers/error');
 const User = require('./models/user');
 
-const MONGODB_URI = 'mongodb+srv://ngtrhieuut:Alo113114115@ngtrhieuut.2ktcr.mongodb.net/shop2'
+const MONGODB_URI = 
+  'mongodb+srv://ngtrhieuut:Alo113114115@ngtrhieuut.2ktcr.mongodb.net/shop2'
 
 const app = express();
 const store = new MongoDBStore({
@@ -53,22 +54,10 @@ app.use((req, res, next) => {
 });
 
 app.use((req, res, next) => {
-  if (!req.session.user) {
-    return next()
-  }
-  User.findById(req.session.user._id)
-  .then(user => {
-    req.user = user;
-    next();
-  })
-  .catch(err => console.log(err));
-});
-
-app.use((req,res,next) => {
   res.locals.isAuthenticated = req.session.isLoggedIn;
   res.locals.csrfToken = req.csrfToken();
   next();
-})
+});
 
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);

@@ -16,14 +16,15 @@
                 <input 
                     class="<%= validationErrors.find(e => e.param === 'email') ? 'invalid' : '' %>"
                     type="email" 
-                    name="email" id="email" 
+                    name="email" 
+                    id="email" 
                     value="<%= oldInput.email %>">
             </div>
             <div class="form-control">
                 <label for="password">Password</label>
                 <input 
                     class="<%= validationErrors.find(e => e.param === 'password') ? 'invalid' : '' %>"
-                    type="password"
+                    type="password" 
                     name="password" 
                     id="password" 
                     value="<%= oldInput.password %>">
@@ -31,8 +32,8 @@
             <div class="form-control">
                 <label for="confirmPassword">Confirm Password</label>
                 <input 
-                    class="<%= validationErrors.find(e => e.param === 'confirmPassword') ? 'invalid' : '' %>"  
-                    type="password"
+                    class="<%= validationErrors.find(e => e.param === 'confirmPassword') ? 'invalid' : '' %>"
+                    type="password" 
                     name="confirmPassword" 
                     id="confirmPassword" 
                     value="<%= oldInput.confirmPassword %>">
