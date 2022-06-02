@@ -262,7 +262,8 @@ form {
 }
 
 .paginaiton a:hover,
-.paginaiton a:active {
+.paginaiton a:active,
+.paginaiton a.active {
   background-color: #00695c;
   color: white;
 }
