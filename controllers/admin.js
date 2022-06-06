@@ -19,10 +19,11 @@ exports.getAddProduct = (req, res, next) => {
 
 exports.postAddProduct = (req, res, next) => {
   const title = req.body.title;
-  const image = req.file;
+  const newImage = req.file;
   const price = req.body.price;
   const description = req.body.description;
-  if (!image) {
+  console.log('check 1:', newImage)
+  if (!newImage) {
     return res.status(422).render('admin/edit-product', {
       pageTitle: 'Add Product',
       path: '/admin/add-product',
@@ -41,6 +42,7 @@ exports.postAddProduct = (req, res, next) => {
 
   if (!errors.isEmpty()) {
     console.log(errors.array());
+    console.log('check: ', imageUrl)
     return res.status(422).render('admin/edit-product', {
       pageTitle: 'Add Product',
       path: '/admin/add-product',
@@ -57,7 +59,9 @@ exports.postAddProduct = (req, res, next) => {
     });
   }
 
-  const imageUrl = image.path;
+  const imageUrl = '/images/'+newImage.filename;
+
+  console.log('check 2:', imageUrl);
 
   const product = new Product({
     // _id: new mongoose.Types.ObjectId('5badf72403fd8b5be0366e81'),
@@ -75,21 +79,6 @@ exports.postAddProduct = (req, res, next) => {
       res.redirect('/admin/products');
     })
     .catch(err => {
-      // return res.status(500).render('admin/edit-product', {
-      //   pageTitle: 'Add Product',
-      //   path: '/admin/add-product',
-      //   editing: false,
-      //   hasError: true,
-      //   product: {
-      //     title: title,
-      //     imageUrl: imageUrl,
-      //     price: price,
-      //     description: description
-      //   },
-      //   errorMessage: 'Database operation failed, please try again.',
-      //   validationErrors: []
-      // });
-      // res.redirect('/500');
       const error = new Error(err);
       error.httpStatusCode = 500;
       return next(error);
@@ -200,7 +189,8 @@ exports.postDeleteProduct = (req, res, next) => {
     if (!product) {
       return next(new Error('Product not found'));
     }
-    fileHelper.deleteFile(product.imageUrl);
+    // const newImageURI = 'C:\\Users\\Admin\\Desktop\\NodeJS\\UdemyLearn\\public\\images\\' + product.imageUrl;
+    // fileHelper.deleteFile(newImageURI);
     return   Product.deleteOne({ _id: prodId, userId: req.user._id });
   })
   .then(() => {
